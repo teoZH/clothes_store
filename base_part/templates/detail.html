@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if cloth %}
+    <h1>{{ cloth.cloth_type }}</h1>
+    <strong>{{ cloth.pub_date }}</strong>
+    <p>{{ cloth.description }}</p>
+    <b> {{ cloth.price }}</b>
+    <button><a href="{% url 'edit' cloth.uuid %}">Edit</a></button>
+{% else %}
+    <h2>No cloth here!</h2>
+{% endif %}
+<button><a href="{{ back }}">Back</a></button>
+
+</body>
+</html>

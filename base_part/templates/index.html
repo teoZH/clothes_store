@@ -5,6 +5,15 @@
     <title>Store Page</title>
 </head>
 <body>
+<ul>
+    <li><a href="{% url 'login' %}">Login</a></li>
+    <li><a href="{% url 'register' %}">Register</a></li>
+    {% if user.is_authenticated %}
+    <li><a href="#">Hello {{ user.username }}</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+    {% endif %}
+
+</ul>
 
 {% if clothes %}
   {% for cloth in clothes %}

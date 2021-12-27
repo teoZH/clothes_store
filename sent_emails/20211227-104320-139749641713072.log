@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on http://127.0.0.1:8000
+From: webmaster@localhost
+To: baihui@abv.bg
+Date: Mon, 27 Dec 2021 10:43:20 -0000
+Message-ID: <164060180089.4206.15402334400534805125@kali>
+
+
+You're receiving this email because you requested a password reset for your user account at http://127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://http://127.0.0.1:8000/reset/Mg/ayb9s8-f5f7e84f40c1f38c22f2b0c85645243c/
+
+Your username, in case you’ve forgotten: baihui
+
+Thanks for using our site!
+
+The http://127.0.0.1:8000 team
+
+
+
+-------------------------------------------------------------------------------

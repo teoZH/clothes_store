@@ -6,11 +6,15 @@
 </head>
 <body>
 <ul>
-    <li><a href="{% url 'login' %}">Login</a></li>
-    <li><a href="{% url 'register' %}">Register</a></li>
+
     {% if user.is_authenticated %}
     <li><a href="#">Hello {{ user.username }}</a></li>
+    <li><a href="{% url 'change_pass' %}">Change Password</a></li>
     <li><a href="{% url 'logout' %}">Logout</a></li>
+    {% else %}
+    <li><a href="{% url 'login' %}">Login</a></li>
+    <li><a href="{% url 'register' %}">Register</a></li>
+    <li><a href="{% url 'forgotten' %}">Forgot Password</a></li>
     {% endif %}
 
 </ul>

@@ -7,10 +7,9 @@ from django.http import HttpResponse
 from django.http import Http404
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-
 from django.contrib.auth.tokens import default_token_generator
-
-from django.contrib.auth.views import PasswordResetConfirmView
+from .forms import UserAvatarForm
+from django.db import transaction
 
 
 def logIN(request):
@@ -30,11 +29,16 @@ def logIN(request):
     return render(request, 'login.html', context)
 
 
+@transaction.atomic
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
+        image_form = UserAvatarForm(files=request.FILES)
+        if form.is_valid() and image_form.is_valid():
+            user = form.save()
+            image_info = image_form.save(commit=False)
+            image_info.user = user
+            image_info.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user = authenticate(request, username=username, password=password)
@@ -42,9 +46,11 @@ def register(request):
             return redirect('index')
     else:
         form = UserCreationForm()
+        image_form = UserAvatarForm()
 
     context = {
-        'form': form
+        'form': form,
+        'img_form': image_form
     }
     return render(request, 'register.html', context)
 
@@ -77,28 +83,27 @@ def forgotten(request):
     return render(request, 'forgotten_pass.html', context)
 
 
-def password_reset_confirm(request,uidb64,token):
+def password_reset_confirm(request, uidb64, token):
     token_generator = default_token_generator
     user_id = force_str(urlsafe_base64_decode(uidb64))
     try:
         user = User.objects.get(pk=user_id)
-        if not token_generator.check_token(user,token):
+        if not token_generator.check_token(user, token):
             return HttpResponse('WRONG!!!!!!!!!!!!!!!!')
     except (TypeError, ValueError, OverflowError, User.DoesNotExis):
         raise Http404()
 
     form = SetPasswordForm(user)
     if request.method == 'POST':
-        form = SetPasswordForm(user,request.POST)
+        form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
             return redirect('index')
 
-
-    context ={
-        'form':form
+    context = {
+        'form': form
     }
-    return render(request,'reset.html',context=context)
+    return render(request, 'reset.html', context=context)
 
 
 def done(request):

@@ -21,6 +21,7 @@
 
 {% if clothes %}
   {% for cloth in clothes %}
+    <img src="{{ cloth.image.url }}" width="200" height="200">
     <a href="{% url 'details' cloth.uuid %}">{{ cloth }}</a> <button><a href="{% url 'delete' cloth.uuid %}">Delete</a></button><br>
   {% endfor %}
 {% else %}

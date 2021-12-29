@@ -21,7 +21,7 @@ def details(request, cloth_id):
 
 def create(request):
     if request.method == "POST":
-        form = ClothesForm(request.POST)
+        form = ClothesForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
     context = {

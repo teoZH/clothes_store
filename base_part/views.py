@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from .forms import ClothesForm
 from .models import Clothes
+from os import remove
 
 
 def index(request):
@@ -20,10 +21,13 @@ def details(request, cloth_id):
 
 
 def create(request):
-    if request.method == "POST":
-        form = ClothesForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = ClothesForm(request.POST,request.FILES)
+            if form.is_valid():
+                cloth = form.save(commit=False)
+                cloth.user = request.user
+                cloth.save()
     context = {
         'form': ClothesForm
     }
@@ -35,12 +39,14 @@ def edit(request, cloth_id):
         cloth = Clothes.objects.get(uuid=cloth_id)
     except Clothes.DoesNotExist:
         raise Http404('CLOTH DOES NOT EXIST')
-
-    if request.method == "POST":
-        form = ClothesForm(request.POST, instance=cloth)
-        if form.is_valid():
-            form.save()
-            return redirect('details', cloth_id)
+    if request.user == cloth.user:
+        if request.method == "POST":
+            form = ClothesForm(request.POST,request.FILES, instance=cloth)
+            if form.is_valid():
+                if request.FILES:
+                    remove(cloth.image.path)
+                form.save()
+                return redirect('details', cloth_id)
 
     form = ClothesForm(instance=cloth)
     context = {
@@ -52,8 +58,9 @@ def edit(request, cloth_id):
 def delete(request,cloth_id):
     try:
         cloth = Clothes.objects.get(uuid=cloth_id)
-        cloth.delete()
+        if request.user == cloth.user:
+            remove(cloth.image.path)
+            cloth.delete()
     except Clothes.DoesNotExist:
         raise Http404('The Resource, you requested does not exist!')
-
     return redirect('index')

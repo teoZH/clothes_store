@@ -10,7 +10,9 @@
     <strong>{{ cloth.pub_date }}</strong>
     <p>{{ cloth.description }}</p>
     <b> {{ cloth.price }}</b>
+    {% if request.user == cloth.user %}
     <button><a href="{% url 'edit' cloth.uuid %}">Edit</a></button>
+    {% endif %}
 {% else %}
     <h2>No cloth here!</h2>
 {% endif %}

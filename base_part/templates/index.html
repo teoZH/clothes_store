@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Store Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
 <ul>
-
-    {% if user.is_authenticated %}
-    <li><a href="#">Hello {{ user.username }}</a></li>
-    <li><a href="{% url 'change_pass' %}">Change Password</a></li>
+    <li class="normal"><a href="{% url 'index' %}" class="active">HOME</a></li>
+    {% if request.user.is_authenticated %}
+    <li class="auth"><a href="#">Hello {{ user.username }}</a></li>
+    <li class="auth"><a href="{% url 'change_pass' %}">Change Password</a></li>
     <li><a href="{% url 'logout' %}">Logout</a></li>
     {% else %}
-    <li><a href="{% url 'login' %}">Login</a></li>
-    <li><a href="{% url 'register' %}">Register</a></li>
-    <li><a href="{% url 'forgotten' %}">Forgot Password</a></li>
+    <li class="auth"><a href="{% url 'login' %}">Login</a></li>
+    <li class="auth"><a href="{% url 'register' %}">Register</a></li>
+    <li class="auth"><a href="{% url 'forgotten' %}">Forgot Password</a></li>
     {% endif %}
 
 </ul>
@@ -22,13 +24,19 @@
 {% if clothes %}
   {% for cloth in clothes %}
     <img src="{{ cloth.image.url }}" width="200" height="200">
-    <a href="{% url 'details' cloth.uuid %}">{{ cloth }}</a> <button><a href="{% url 'delete' cloth.uuid %}">Delete</a></button><br>
+    <a href="{% url 'details' cloth.uuid %}">{{ cloth }}</a> {% if request.user == cloth.user %}<button><a href="{% url 'delete' cloth.uuid %}">Delete</a></button>{% endif %}<br>
   {% endfor %}
 {% else %}
   <h1>No clothes available</h1>
 {% endif %}
 
+{% if request.user.is_authenticated %}
 <button><h3><a href="{% url 'create' %}">ADD</a></h3></button>
+{% endif %}
 
+
+<div class="footer">
+  <p>Made by th3OZH</p>
+</div>
 </body>
 </html>

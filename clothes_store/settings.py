@@ -128,3 +128,4 @@ MEDIA_ROOT = BASE_DIR.joinpath('media')
 STATICFILES_DIRS = [
     BASE_DIR.joinpath('static')
 ]
+AUTH_USER_MODEL = 'authentication.UserProfile'

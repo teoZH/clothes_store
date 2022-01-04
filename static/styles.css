@@ -1,5 +1,6 @@
 body {
     margin: 0px;
+    height: 150%;
 }
 
 ul {
@@ -7,7 +8,11 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+
+}
+
+.nav  {
+  background-color: #333;
 }
 
 li.normal {
@@ -31,20 +36,57 @@ li a:hover {
 }
 
 
-
-
-
 .active {
   background-color: #04AA6D;
+}
+
+
+
+
+.grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 20px;
+    background-color:#DEB887;
+}
+
+
+.grid-item {
+    margin: 10px;
+    background-color:#F0FFFF;
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+}
+
+
+
+
+.pagination {
+    width: 60%;
+    position: relative;
+    top: 10px;
+    margin: auto;
+    background-color: #DC143C;
+    color: black;
+    text-align: center;
+}
+
+.center li {
+    margin: auto;
+}
+
+.pagination li {
+    display: inline-block;
 }
 
 .footer {
   color: white;
   background-color: #333;
-  padding: 10px;
-  margin-top:20px;
-  position:absolute;
-  bottom: 0;
+  position:relative;
+  top: 30px;
   width: 100%;
   text-align: center;
 }

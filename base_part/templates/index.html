@@ -7,36 +7,50 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-<ul>
+<ul class="nav">
     <li class="normal"><a href="{% url 'index' %}" class="active">HOME</a></li>
     {% if request.user.is_authenticated %}
+    <li class="normal"><a href="{% url 'create' %}">ADD</a></li>
     <li class="auth"><a href="#">Hello {{ user.username }}</a></li>
     <li class="auth"><a href="{% url 'change_pass' %}">Change Password</a></li>
-    <li><a href="{% url 'logout' %}">Logout</a></li>
+    <li class="auth"><a href="{% url 'logout' %}">Logout</a></li>
     {% else %}
     <li class="auth"><a href="{% url 'login' %}">Login</a></li>
     <li class="auth"><a href="{% url 'register' %}">Register</a></li>
     <li class="auth"><a href="{% url 'forgotten' %}">Forgot Password</a></li>
     {% endif %}
-
 </ul>
-
-{% if clothes %}
+<div class="grid-container">
+    {% if clothes %}
   {% for cloth in clothes %}
-    <img src="{{ cloth.image.url }}" width="200" height="200">
-    <a href="{% url 'details' cloth.uuid %}">{{ cloth }}</a> {% if request.user == cloth.user %}<button><a href="{% url 'delete' cloth.uuid %}">Delete</a></button>{% endif %}<br>
+    <div class="grid-item">
+        <img src="{{ cloth.image.url }}" width="200" height="200">
+        <a href="{% url 'details' cloth.uuid %}">{{ cloth }}</a> {% if request.user == cloth.user %}<button><a href="{% url 'delete' cloth.uuid %}">Delete</a></button>{% endif %}<br>
+    </div>
   {% endfor %}
 {% else %}
   <h1>No clothes available</h1>
 {% endif %}
-
-{% if request.user.is_authenticated %}
-<button><h3><a href="{% url 'create' %}">ADD</a></h3></button>
-{% endif %}
-
-
+</div>
+ <ul class="pagination">
+     <div class="center-li">
+        {% if clothes.has_previous %}
+            <li><a href="?page={{ clothes.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+         {% for i in clothes.paginator.page_range %}
+                {% if clothes.number == i %}
+                  <li><a href="?page={{ i }}" class="active">{{ i }}</a></li>
+                {% else %}
+                  <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+        {% endfor %}
+        {% if movies.has_next %}
+                <li><a href="?page={{ movies.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+     </div>
+ </ul>
 <div class="footer">
-  <p>Made by th3OZH</p>
+        <p>Made by th3OZH</p>
 </div>
 </body>
 </html>

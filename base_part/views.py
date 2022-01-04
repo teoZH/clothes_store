@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
 from django.http import Http404
 from .forms import ClothesForm
 from .models import Clothes
@@ -7,7 +8,12 @@ from os import remove
 
 def index(request):
     clothes = Clothes.objects.all()
-    context = {'clothes': clothes}
+    paginator = Paginator(clothes,4)
+    page_number = request.GET.get('page')
+    if not page_number:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+    context = {'clothes': page_obj}
     return render(request, 'index.html', context)
 
 

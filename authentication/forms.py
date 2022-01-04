@@ -1,8 +1,11 @@
 from django.forms import ModelForm
-from .models import UserAvatar
+from django.contrib.auth.forms import AuthenticationForm, \
+    PasswordResetForm, PasswordChangeForm, SetPasswordForm, UserCreationForm, UsernameField
+from .models import UserProfile
 
 
-class UserAvatarForm(ModelForm):
+class RegisterForm(UserCreationForm):
     class Meta:
-        model = UserAvatar
-        fields = ['image']
+        model = UserProfile
+        fields = ("username", 'image')
+        field_classes = {'username': UsernameField}

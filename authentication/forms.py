@@ -7,5 +7,5 @@ from .models import UserProfile
 class RegisterForm(UserCreationForm):
     class Meta:
         model = UserProfile
-        fields = ("username", 'image')
+        fields = ("username", 'image', 'email')
         field_classes = {'username': UsernameField}

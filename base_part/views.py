@@ -5,6 +5,8 @@ from .forms import ClothesForm
 from .models import Clothes
 from os import remove
 from django.views import View
+from .decorators import user_is_authenticated,has_object_permission
+from django.utils.decorators import method_decorator
 
 
 class IndexView(View, PaginationMixin, ContentMixin):
@@ -27,12 +29,12 @@ class DetailsView(View, ContentMixin):
 
     def dispatch(self, request, *args, **kwargs):
         self.obj_id = kwargs['cloth_id']
-        return super().dispatch(request,*args,**kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args,**kwargs):
+    def get(self, request, *args, **kwargs):
         self.get_object_id(request)
         extra = {'back': request.META.get('HTTP_REFERER') if request.META.get('HTTP_REFERER') else ''}
-        return self.render_to_response(request,**extra)
+        return self.render_to_response(request, **extra)
 
 
 class CreateView(View, FormMixin):
@@ -41,35 +43,27 @@ class CreateView(View, FormMixin):
     redirect_to = 'index'
     type_func = 'create'
 
+    @method_decorator(user_is_authenticated)
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('index')
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        return render(request, 'add_cloth.html', {'form':ClothesForm})
+        return render(request, 'add_cloth.html', {'form': ClothesForm})
 
 
-
-class EditView(View,FormMixin):
+class EditView(View, FormMixin):
     object_klass = Clothes
     object = None
     form_klass = ClothesForm
     obj_id = 'cloth_id'
     redirect_to = 'details'
 
+    @method_decorator(has_object_permission(obj_id,object_klass))
     def dispatch(self, request, *args, **kwargs):
-        try:
-            print(kwargs)
-            self.object = self.object_klass.objects.get(uuid=kwargs[self.obj_id])
-            if request.method == 'POST':
-                if not request.user == self.object.user:
-                    raise Http404('Not Possible!')
-        except self.object_klass.DoesNotExist:
-            redirect('index')
+        self.object = self.object_klass.objects.get(uuid=kwargs[self.obj_id])
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request,*args,**kwargs):
+    def get(self, request, *args, **kwargs):
         form = self.form_klass(instance=self.object)
         context = {
             'form': form
